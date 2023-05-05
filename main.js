@@ -6,18 +6,15 @@ window.addEventListener('resize', function() {
   {
     let canvas = component.querySelector('canvas')
     let c = canvas.getContext('2d')
-
-  	let strokeColor = component.getAttribute('fc-cursor-tracking-stroke-color') === null ? '#4353ff' : component.getAttribute('fc-cursor-tracking-stroke-color')
-
-  	let strokeThickness = isNaN(parseInt(component.getAttribute('fc-cursor-tracking-stroke-thickness'))) ? 4 : parseInt(component.getAttribute('fc-cursor-tracking-stroke-thickness'))
-
+    let strokeColor = component.getAttribute('fc-cursor-tracking-stroke-color') === null ? '#4353ff' : component.getAttribute('fc-cursor-tracking-stroke-color')
+    let strokeThickness = isNaN(parseInt(component.getAttribute('fc-cursor-tracking-stroke-thickness'))) ? 4 : parseInt(component.getAttribute('fc-cursor-tracking-stroke-thickness'))
     let strokeLength = isNaN(parseInt(component.getAttribute('fc-cursor-tracking-stroke-length'))) ? 15 : parseInt(component.getAttribute('fc-cursor-tracking-stroke-length'))
   
     canvas.width = component.clientWidth
     canvas.height = component.clientHeight
     
     c.strokeStyle = strokeColor
-  	c.lineWidth = strokeThickness
+    c.lineWidth = strokeThickness
   }
 })
   
@@ -54,33 +51,31 @@ for(let component of components)
 
   component.addEventListener('mousemove', function(event) {
 
-		const rect = component.getBoundingClientRect()
+  const rect = component.getBoundingClientRect()
 
-    lastMousePosition = {
+   lastMousePosition = {
       x: event.x - rect.left,
       y: event.y - rect.top
-    }
+   }
     
-    console.log(lastMousePosition)
-    
-    clearTimeout(mouseIsStoppedTimer)
-    mouseIsStoppedTimerElapsed = false
+   clearTimeout(mouseIsStoppedTimer)
+   mouseIsStoppedTimerElapsed = false
 
     mouseIsStoppedTimer = setTimeout(function() {
 
-      if(mousePositions.length == strokeLength)
-        mousePositions.shift()
+    if(mousePositions.length == strokeLength)
+      mousePositions.shift()
 
-      mousePositions.push(lastMousePosition)
+    mousePositions.push(lastMousePosition)
 
-    }, 50)
+  }, 50)
 
-    if(collectMousePositionTimerElapsed)
-    { 
-      collectMousePositionTimerElapsed = false
+  if(collectMousePositionTimerElapsed)
+  { 
+    collectMousePositionTimerElapsed = false
 
-      if(mousePositions.length == strokeLength)
-        mousePositions.shift()
+    if(mousePositions.length == strokeLength)
+      mousePositions.shift()
 
       mousePositions.push({
         x: event.x - rect.left,
