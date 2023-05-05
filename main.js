@@ -32,6 +32,11 @@ for(let component of components)
 
   c.strokeStyle = strokeColor
   c.lineWidth = strokeThickness
+  
+  window.addEventListener('resize', function() {
+    canvas.width = component.clientWidth
+    canvas.height = component.clientHeight 
+  })
 
   component.addEventListener('mousemove', function(event) {
 
