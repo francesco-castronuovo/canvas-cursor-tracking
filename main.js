@@ -1,8 +1,29 @@
 let components = document.querySelectorAll('[fc-cursor-tracking = component]')
+
+window.addEventListener('resize', function() {
+
+  for(let component of components)
+  {
+    let canvas = component.querySelector('canvas')
+    let c = canvas.getContext('2d')
+
+  	let strokeColor = component.getAttribute('fc-cursor-tracking-stroke-color') === null ? '#4353ff' : component.getAttribute('fc-cursor-tracking-stroke-color')
+
+  	let strokeThickness = isNaN(parseInt(component.getAttribute('fc-cursor-tracking-stroke-thickness'))) ? 4 : parseInt(component.getAttribute('fc-cursor-tracking-stroke-thickness'))
+
+    let strokeLength = isNaN(parseInt(component.getAttribute('fc-cursor-tracking-stroke-length'))) ? 15 : parseInt(component.getAttribute('fc-cursor-tracking-stroke-length'))
+  
+    canvas.width = component.clientWidth
+    canvas.height = component.clientHeight
+    
+    c.strokeStyle = strokeColor
+  	c.lineWidth = strokeThickness
+  }
+})
   
 for(let component of components)
 {
-  let canvas = component.querySelector('[fc-cursor-tracking = canvas] canvas')
+  let canvas = component.querySelector('canvas')
   let c = canvas.getContext('2d')
 
   let strokeColor = component.getAttribute('fc-cursor-tracking-stroke-color') === null ? '#4353ff' : component.getAttribute('fc-cursor-tracking-stroke-color')
@@ -10,8 +31,6 @@ for(let component of components)
   let strokeThickness = isNaN(parseInt(component.getAttribute('fc-cursor-tracking-stroke-thickness'))) ? 4 : parseInt(component.getAttribute('fc-cursor-tracking-stroke-thickness'))
 
   let strokeLength = isNaN(parseInt(component.getAttribute('fc-cursor-tracking-stroke-length'))) ? 15 : parseInt(component.getAttribute('fc-cursor-tracking-stroke-length'))
-
-  console.log(strokeLength)
 
   let mousePositions = []
   let lastMousePosition = {
@@ -32,19 +51,18 @@ for(let component of components)
 
   c.strokeStyle = strokeColor
   c.lineWidth = strokeThickness
-  
-  window.addEventListener('resize', function() {
-    canvas.width = component.clientWidth
-    canvas.height = component.clientHeight 
-  })
 
   component.addEventListener('mousemove', function(event) {
 
-    lastMousePosition = {
-      x: event.offsetX,
-      y: event.offsetY
-    }
+		const rect = component.getBoundingClientRect()
 
+    lastMousePosition = {
+      x: event.x - rect.left,
+      y: event.y - rect.top
+    }
+    
+    console.log(lastMousePosition)
+    
     clearTimeout(mouseIsStoppedTimer)
     mouseIsStoppedTimerElapsed = false
 
@@ -65,8 +83,8 @@ for(let component of components)
         mousePositions.shift()
 
       mousePositions.push({
-        x: event.offsetX,
-        y: event.offsetY
+        x: event.x - rect.left,
+        y: event.y - rect.top
       })
     }
   })
